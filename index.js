@@ -17,31 +17,50 @@ const port = 3000;
 
 
 //4- Start the server
-server.listen(port, hostname, () => {
-    console.log(`Server running at http://${hostname}:${port}/`);
-});
+// server.listen(port, hostname, () => {
+//     console.log(`Server running at http://${hostname}:${port}/`);
+// });
 
 //***********PART 5 : Open Exploration***********/
 const server = http.createServer((req, res) => {
     // Default headers  for all responses
-    res.statusCode = 200;
     res.setHeader('Content-Type', 'text/html');
 
     // Switch statement to handle routing
-    switch (req.url) {
- // Default route '/'
-        case `/`:
+    switch (true) {
+        // Default route '/'
+        case req.url === `/`:
             res.statusCode = 200;
+            res.write('<h1>Welcome to the Home Page!</h1>');
+            res.write('<p>This is the default route of my Node.js server.</p>');
             break;
-            // About route '/about'
-        case `/about`:
+
+        // About route '/about'
+        case req.url === `/about`:
             res.statusCode = 200;
-            break;    
-// Info route '/info'
-case `/info`:
-    res.statusCode = 200;
+            res.write('<h1>About Us</h1>');
+            res.write('<p>This is another route of my Node.js server.</p>');
             break;
-            // Catch all route for unknown paths
+
+
+        // Info route '/info'
+        case req.url === `/info`:
+            res.statusCode = 200;
+            res.write('<h1>Information</h1>');
+            res.write('<p>This is again another route of my Node.js server.</p>');
+            break;
+
+
+
+        // Manage dynamic '/name/:name'
+        case req.url.startsWith('/name/'):
+            const name = req.url.split('/')[2]; // Extract name from URL after 2nd '/'
+            res.statusCode = 200;
+            res.write(`<h1>Hello ${name}!</h1>`);
+            res.write(`<p>Welcome to my server! I'm glad you're here ${name}.</p>`);
+            break;
+
+        // Catch all route for unknown paths
         default:
             res.statusCode = 404;
             res.write('<h1>404 Not Found</h1>');
@@ -51,4 +70,10 @@ case `/info`:
 
     // End the response
     res.end();
+});
+
+
+//Start the server
+server.listen(port, hostname, () => {
+    console.log(`Server running at http://${hostname}:${port}/`);
 });
